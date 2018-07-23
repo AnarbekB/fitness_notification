@@ -1,0 +1,5 @@
+.DS_Store
+devenv/nginx/logs
+devenv/rabbitmq/data
+devenv/mysql/data
+.idea
