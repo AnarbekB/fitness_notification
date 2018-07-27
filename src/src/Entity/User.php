@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User extends BaseUser
 {
-    use AbstractEntity;
+    use RequiredFieldsEntity;
 
     /**
      * @ORM\Id
@@ -24,5 +24,8 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
+
+        $this->createdAt = \DateTimeImmutable::createFromMutable(new \DateTime());
+        $this->updatedAt = new \DateTime();
     }
 }
