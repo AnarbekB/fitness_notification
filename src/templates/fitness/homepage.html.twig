@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'homepage' %}
+
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+    {#slider#}
+
+    <div class="uk-position-relative uk-visible-toggle uk-light" uk-slideshow="ratio: 7:3; animation: push; autoplay: true">
+
+        <ul class="uk-slideshow-items">
+            <li>
+                <img src="https://m.onfit.ru/upload/club_photo/3250/images/fitness_one_art_gorbushkin_dvor002.jpg" alt="" uk-cover>
+            </li>
+            <li>
+                <img src="https://stratus.priime.com/uploads/collection_photo/image/29143/L_mini_magick20161204-18769-zgwq0l.jpg" alt="" uk-cover>
+            </li>
+            <li>
+                <img src="https://onfit.ru/upload/club_photo/3249/images/fitness_one_art_filigrad001.jpg" alt="" uk-cover>
+            </li>
+        </ul>
+
+        <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+        <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+
+    </div>
+
+    {#slider end#}
+
+    <article class="uk-article">
+        <h1 class="uk-article-title"><a class="uk-link-reset" href="">Someone Fitness</a></h1>
+
+        <p class="uk-text-lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </article>
+{% endblock %}
