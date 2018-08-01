@@ -122,7 +122,7 @@ class User extends BaseUser
     /**
      * @return string
      */
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
@@ -140,7 +140,7 @@ class User extends BaseUser
     /**
      * @return string
      */
-    public function getMiddleName(): string
+    public function getMiddleName(): ?string
     {
         return $this->middleName;
     }
@@ -158,7 +158,7 @@ class User extends BaseUser
     /**
      * @return string
      */
-    public function getLastName(): string
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
@@ -166,7 +166,7 @@ class User extends BaseUser
     /**
      * @return \DateTime
      */
-    public function getDateOfBirth(): \DateTime
+    public function getDateOfBirth(): ?\DateTime
     {
         return $this->dateOfBirth;
     }
@@ -184,7 +184,7 @@ class User extends BaseUser
     /**
      * @return string
      */
-    public function getGender(): string
+    public function getGender(): ?string
     {
         return $this->gender;
     }
@@ -202,7 +202,7 @@ class User extends BaseUser
     /**
      * @return string
      */
-    public function getPhoto(): string
+    public function getPhoto(): ?string
     {
         return $this->photo;
     }

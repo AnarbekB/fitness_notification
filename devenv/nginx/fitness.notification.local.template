@@ -1,4 +1,4 @@
-    server {
+server {
     listen ${NGINX_PORT};
     server_name ${NGINX_HOST};
 
@@ -10,34 +10,23 @@
     gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript application/javascript;
     sendfile on;
     keepalive_timeout 500s;
-    
+
     set $project_root /var/www/html;
     root $project_root/public;
     index index.php;
 
-    set $request_url $request_uri;
-
-    if ( $request_url ~ ^(.*)/(.*)$){
-        set $request_url $1/$2;
+    location ~ ^/(.+)\.php$ {
+        fastcgi_intercept_errors on;
+        try_files $uri /index.php =404;
+        include         fastcgi_params;
+        fastcgi_pass ${PHP_FPM_HOST}:${PHP_FPM_PORT};
+        fastcgi_index   index.php;
+        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param  REQUEST_URI        $request_uri;
+        fastcgi_read_timeout 500;
     }
 
-	location ~ ^/(.+)$ {
-		fastcgi_intercept_errors on;
-		try_files $uri /index.php =404;
-		include         fastcgi_params;
-		fastcgi_pass ${PHP_FPM_HOST}:${PHP_FPM_PORT};
-		fastcgi_index   index.php;
-		fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
-		fastcgi_param  REQUEST_URI        $request_url;
-		fastcgi_read_timeout 500;
-	}
-
     location / {
-        root $project_root/frontend;
-        index index.html;
-        add_header 'X-Frame-Options' 'DENY';
-        add_header 'Content-Security-Policy' "frame-ancestors 'self'";
-        add_header 'X-XSS-Protection' "1; mode=block;";
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri/ /index.php?$query_string;
     }
 }
