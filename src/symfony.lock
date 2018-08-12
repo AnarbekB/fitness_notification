@@ -86,6 +86,12 @@
     "friendsofsymfony/user-bundle": {
         "version": "v2.1.2"
     },
+    "giggsey/libphonenumber-for-php": {
+        "version": "8.9.11"
+    },
+    "giggsey/locale": {
+        "version": "1.5"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },

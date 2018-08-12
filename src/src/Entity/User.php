@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Constants\Gender;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity
@@ -66,7 +67,18 @@ class User extends BaseUser
      * @var string
      * @ORM\Column(type="string")
      */
-    protected $photo;
+    protected $profilePhoto;
+
+    /**
+     * @var UploadedFile
+     */
+    protected $file;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $phone;
 
     public function __construct()
     {
@@ -202,18 +214,105 @@ class User extends BaseUser
     /**
      * @return string
      */
-    public function getPhoto(): ?string
+    public function getPhone(): ?string
     {
-        return $this->photo;
+        return $this->phone;
     }
 
     /**
-     * @param string $photo
-     * @return User
+     * @param string $phone
      */
-    public function setPhoto(string $photo): User
+    public function setPhone(string $phone)
     {
-        $this->photo = $photo;
+        $this->phone = format_phone($phone);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getAbsolutePath()
+    {
+        return null === $this->profilePhoto ? null : $this->getUploadRootDir(kernel_path()).'/'.$this->profilePhoto;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getWebPath()
+    {
+        return null === $this->profilePhoto ? null : $this->getUploadDir().'/'.$this->profilePhoto;
+    }
+
+    /**
+     * @param string $basepath
+     * @return string
+     */
+    protected function getUploadRootDir($basepath = '/')
+    {
+        // the absolute directory path where uploaded documents should be saved
+        return $basepath . $this->getUploadDir();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getUploadDir()
+    {
+        //todo this value in config
+        return 'uploads/users';
+    }
+
+    /**
+     * @param string $fileName
+     * @return $this
+     */
+    protected function setImageName(string $fileName)
+    {
+        $this->profilePhoto = $fileName;
+
         return $this;
+    }
+
+    /**
+     * @param string $basepath
+     */
+    public function upload(string $basepath)
+    {
+        // the file property can be empty if the field is not required
+        if (null === $this->file) {
+            return;
+        }
+
+        if (null === $basepath) {
+            return;
+        }
+
+        // we use the original file name here but you should
+        // sanitize it at least to avoid any security issues
+
+        // move takes the target directory and then the target filename to move to
+        $this->file->move($this->getUploadRootDir($basepath), $this->file->getClientOriginalName());
+
+        // set the path property to the filename where you'ved saved the file
+        $this->setImageName($this->file->getClientOriginalName());
+
+        // clean up the file property as you won't need it anymore
+        $this->file = null;
+    }
+
+    /**
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param UploadedFile|null $file
+     */
+    public function setFile(UploadedFile $file = null)
+    {
+        $this->file = $file;
     }
 }
