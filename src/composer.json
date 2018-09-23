@@ -7,6 +7,7 @@
         "friendsofsymfony/user-bundle": "~2.0",
         "giggsey/libphonenumber-for-php": "^8.9",
         "myclabs/php-enum": "^1.6",
+        "ramsey/uuid": "^3.8",
         "sensio/framework-extra-bundle": "^5.1",
         "sonata-project/admin-bundle": "^3.37",
         "sonata-project/doctrine-orm-admin-bundle": "^3.6",
@@ -27,12 +28,14 @@
         "symfony/validator": "^4.1",
         "symfony/web-link": "^4.1",
         "symfony/webpack-encore-pack": "*",
-        "symfony/yaml": "^4.1"
+        "symfony/yaml": "^4.1",
+        "twilio/sdk": "^5.21"
     },
     "require-dev": {
         "symfony/debug-pack": "*",
         "symfony/dotenv": "^4.1",
         "symfony/maker-bundle": "^1.0",
+        "symfony/phpunit-bridge": "^4.1",
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "^1.0",
         "symfony/web-server-bundle": "^4.1"
@@ -54,7 +57,8 @@
         },
         "files": [
             "helpers/phone_helpers.php",
-            "helpers/dir_helpers.php"
+            "helpers/dir_helpers.php",
+            "helpers/str_helpers.php"
         ]
     },
     "replace": {

@@ -1,19 +1,11 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\EntityTraits;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait RequiredFieldsEntity
+trait Timestamp
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     * @var int
-     */
-    protected $id;
-
     /**
      * @ORM\Column(type="datetime_immutable")
      * @var \DateTimeImmutable
@@ -28,6 +20,8 @@ trait RequiredFieldsEntity
 
     /**
      * @return void
+     *
+     * @ORM\PrePersist()
      */
     public function prePersist(): void
     {
@@ -37,18 +31,12 @@ trait RequiredFieldsEntity
 
     /**
      * @return void
+     *
+     * @ORM\PreUpdate()
      */
     public function preUpdate(): void
     {
         $this->updatedAt = new \DateTime();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     /**

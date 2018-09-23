@@ -2,5 +2,9 @@ homepage:
     path: /
     controller: App\Controller\IndexController::index
 
+reset_password:
+    path: /reset-password/{slug}
+    controller: App\Controller\SecurityController::resetUrl
+
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"

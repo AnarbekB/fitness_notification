@@ -3,16 +3,22 @@
 namespace App\Entity;
 
 use App\Constants\Gender;
+use App\Constants\NotifyTemplate;
+use App\Entity\EntityTraits\Timestamp;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Twilio\Rest\Client;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="users")
+ * @ORM\HasLifecycleCallbacks()
  */
 class User extends BaseUser
 {
+    use Timestamp;
+
     /**
      * @var int
      * @ORM\Id
@@ -20,18 +26,6 @@ class User extends BaseUser
      * @ORM\Column(type="integer")
      */
     protected $id;
-
-    /**
-     * @var \DateTimeImmutable
-     * @ORM\Column(type="datetime_immutable")
-     */
-    protected $createdAt;
-
-    /**
-     * @var \DateTime
-     * @ORM\Column(type="datetime")
-     */
-    protected $updatedAt;
 
     /**
      * @var string
@@ -65,7 +59,7 @@ class User extends BaseUser
 
     /**
      * @var string
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $profilePhoto;
 
@@ -80,47 +74,19 @@ class User extends BaseUser
      */
     protected $phone;
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->createdAt = \DateTimeImmutable::createFromMutable(new \DateTime());
-        $this->updatedAt = new \DateTime();
-    }
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $passwordResetGuid;
 
     /**
-     * @return void
+     * @return int
      */
-    public function prePersist(): void
+    public function getId(): int
     {
-        $this->createdAt = \DateTimeImmutable::createFromMutable(new \DateTime());
-        $this->updatedAt = new \DateTime();
+        return $this->id;
     }
-
-    /**
-     * @return void
-     */
-    public function preUpdate(): void
-    {
-        $this->updatedAt = new \DateTime();
-    }
-
-    /**
-     * @return \DateTimeImmutable
-     */
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getUpdatedAt(): \DateTime
-    {
-        return $this->updatedAt;
-    }
-
     /**
      * @param string $firstName
      * @return User
@@ -228,6 +194,22 @@ class User extends BaseUser
     }
 
     /**
+     * @return string
+     */
+    public function getPasswordResetGuid(): string
+    {
+        return $this->passwordResetGuid;
+    }
+
+    /**
+     * @param string $passwordResetGuid
+     */
+    public function setPasswordResetGuid(string $passwordResetGuid)
+    {
+        $this->passwordResetGuid = $passwordResetGuid;
+    }
+
+    /**
      * @return null|string
      */
     public function getAbsolutePath()
@@ -274,11 +256,20 @@ class User extends BaseUser
     }
 
     /**
+     * @return string | null
+     */
+    public function getProfilePhoto(): ?string
+    {
+        return $this->profilePhoto;
+    }
+
+    /**
+     * Upload file
+     *
      * @param string $basepath
      */
     public function upload(string $basepath)
     {
-        // the file property can be empty if the field is not required
         if (null === $this->file) {
             return;
         }
@@ -287,16 +278,10 @@ class User extends BaseUser
             return;
         }
 
-        // we use the original file name here but you should
-        // sanitize it at least to avoid any security issues
-
-        // move takes the target directory and then the target filename to move to
         $this->file->move($this->getUploadRootDir($basepath), $this->file->getClientOriginalName());
 
-        // set the path property to the filename where you'ved saved the file
         $this->setImageName($this->file->getClientOriginalName());
 
-        // clean up the file property as you won't need it anymore
         $this->file = null;
     }
 
@@ -314,5 +299,40 @@ class User extends BaseUser
     public function setFile(UploadedFile $file = null)
     {
         $this->file = $file;
+    }
+
+    public function __toString()
+    {
+        return sprintf('%s', $this->getFullName());
+    }
+
+    public function getFullName() :string
+    {
+        return $this->firstName . ' ' . $this->middleName . ' ' . $this->lastName;
+    }
+
+    public function notifySms(NotifyTemplate $template)
+    {
+        $client = new Client(getenv('TWILIO_SID'), getenv('TWILIO_TOKEN'));
+
+        $client->messages->create(
+            $this->phone,
+            [
+                'from' => getenv('TWILIO_FROM'),
+                'body' => placeholders_replace(
+                    $template->getValue(),
+                    [
+                        'fullName' => $this->getFullName(),
+                        'linkSetPassword' =>
+                            'http://fitness.notification.local:8083/reset-password/' . $this->getPasswordResetGuid()
+                    ]
+                )
+            ]
+        );
+    }
+
+    public function notify(object $instance)
+    {
+        $instance->send();
     }
 }
