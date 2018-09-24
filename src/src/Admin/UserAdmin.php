@@ -3,11 +3,8 @@
 namespace App\Admin;
 
 use App\Constants\Gender;
-use App\Constants\NotifyTemplate;
 use App\Entity\User;
-use App\Notification\Channel\SmsNotification;
 use App\Notification\Template\RegistrationSuccess;
-use App\Notification\TestNotification;
 use App\Service\NotifyService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
@@ -15,12 +12,10 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -60,25 +55,29 @@ class UserAdmin extends AbstractAdmin
             $imageEmbed = '<img src="/'.$imagePath.'" class="admin-preview" />';
         }
 
-        $form->add('username', TextType::class);
-        $form->add('firstName', TextType::class);
-        $form->add('middleName', TextType::class);
-        $form->add('lastName', TextType::class);
-        $form->add('password', PasswordType::class);
-        $form->add('gender', ChoiceType::class, [
-            'choices'  => [
-                Gender::MAN => Gender::MAN(),
-                Gender::WOMAN => Gender::WOMAN()
-            ],
-        ]);
-        $form->add('dateOfBirth', BirthdayType::class);
-        $form->add('email', EmailType::class);
-        $form->add('phone', TelType::class);
-        $form->add('file', FileType::class, [
-            'required' => false,
-            'data_class' => null,
-            'help' => $imageEmbed,
-        ]);
+        $form->with('Основное', ['class' => 'col-sm-9']);
+            $form->add('firstName', TextType::class, ['label' => 'Имя']);
+            $form->add('lastName', TextType::class, ['label' => 'Фамилия']);
+            $form->add('middleName', TextType::class, ['label' => 'Отчество']);
+            $form->add('email', EmailType::class, ['label' => 'Email']);
+            $form->add('phone', TelType::class, ['label' => 'Телефон']);
+        $form->end();
+        $form->with('Дополнительное', ['class' => 'col-sm-3']);
+            $form->add('gender', ChoiceType::class, [
+                'label' => 'Пол',
+                'choices'  => [
+                    Gender::MAN => Gender::MAN(),
+                    Gender::WOMAN => Gender::WOMAN()
+                ],
+            ]);
+            $form->add('dateOfBirth', BirthdayType::class, ['label' => 'Дата рождения']);
+            $form->add('file', FileType::class, [
+                'label' => 'Изображение профиля',
+                'required' => false,
+                'data_class' => null,
+                'help' => $imageEmbed,
+            ]);
+        $form->end();
     }
 
     protected function configureShowFields(ShowMapper $show)
@@ -143,6 +142,8 @@ class UserAdmin extends AbstractAdmin
     {
         if ($user instanceof User) {
             $user->setPasswordResetGuid(guid());
+            $user->setUsername($user->getEmail());
+            $user->setPassword(guid());
             $this->em->flush();
             $this->saveFile($user);
         }

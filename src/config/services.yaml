@@ -34,7 +34,12 @@ services:
         class: App\Admin\UserAdmin
         arguments: [~, App\Entity\User, ~]
         tags:
-            - { name: sonata.admin, manager_type: orm, group: 'Пользователи', label: 'Пользователи' }
+            - { name: sonata.admin,
+                manager_type: orm,
+                group: 'Пользователи',
+                label: 'Пользователи',
+                icon: '<i class="fa fa-users" aria-hidden="true"></i>'
+              }
         public: true
 
     twilio_client:

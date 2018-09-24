@@ -13,5 +13,5 @@ note:
 
 todo:
 - rabbitmq
-- notify service
+- notify service +
 - subscription to classes

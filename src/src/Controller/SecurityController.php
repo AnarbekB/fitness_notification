@@ -31,7 +31,7 @@ class SecurityController extends AbstractController
         $passwordObject = $this->securityManager->changePasswordByResetGuid($slug, $request);
 
         if ($passwordObject->success) {
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('fos_user_profile_show');
         }
 
         return $this->render(
