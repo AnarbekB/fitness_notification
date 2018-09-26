@@ -59,6 +59,11 @@ class GroupLesson
      */
     protected $comment;
 
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     */
     protected $trainer;
 
     /**
@@ -71,5 +76,120 @@ class GroupLesson
     public function __construct()
     {
         $this->users = new ArrayCollection();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string | null
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return \DateTime | null
+     */
+    public function getDate(): ?\DateTime
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param \DateTime $date
+     */
+    public function setDate(\DateTime $date)
+    {
+        $this->date = $date;
+    }
+
+    /**
+     * @return string | null
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType(string $type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string | null
+     */
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    /**
+     * @param string $comment
+     */
+    public function setComment(string $comment)
+    {
+        $this->comment = $comment;
+    }
+
+    /**
+     * @return User | null
+     */
+    public function getTrainer(): ?User
+    {
+        return $this->trainer;
+    }
+
+    /**
+     * @param User $trainer
+     */
+    public function setTrainer(User $trainer)
+    {
+        $this->trainer = $trainer;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function removeUser(User $user): bool
+    {
+        return $this->users->removeElement($user);
+    }
+
+    /**
+     * @param User $user
+     * @return GroupLesson
+     */
+    public function addUser(User $user): GroupLesson
+    {
+        $this->users[] = $user;
+        return $this;
     }
 }

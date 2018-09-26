@@ -322,6 +322,6 @@ class User extends BaseUser
 
     public function getFullName() :string
     {
-        return $this->firstName . ' ' . $this->middleName . ' ' . $this->lastName;
+        return $this->lastName. ' ' . $this->firstName . ' ' . $this->middleName;
     }
 }

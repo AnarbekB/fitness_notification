@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'group-lessons' %}
+
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body %}
+
+    <div class="uk-container">
+
+        <h2 class=".uk-article">Групповые занятия:</h2>
+
+        {% for lesson in lessons %}
+            <div style="display: block">
+                <div class="uk-card uk-card-default uk-width-1-2@m">
+                    <div class="uk-card-header">
+                        <div class="uk-grid-small uk-flex-middle" uk-grid>
+                            <div class="uk-width-auto">
+                                 {% if lesson.trainer.profilePhoto is not null %}
+                                     <img class="uk-border-circle" width="40" height="40" src="uploads/users/{{ lesson.trainer.profilePhoto }}">
+                                 {% else %}
+                                     <img class="uk-border-circle" width="40" height="40" src="img/avatar.jpg">
+                                 {% endif %}
+                            </div>
+                            <div class="uk-width-expand">
+                                <h3 class="uk-card-title uk-margin-remove-bottom">{{ lesson.name }}</h3>
+                                <p class="uk-text-meta uk-margin-remove-top"><time datetime="2016-04-01T19:00">{{ lesson.date | date('d/m/Y h:m') }}</time></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-card-body">
+                        <p>{{ lesson.comment }}</p>
+                        <p>Тренер: {{ lesson.trainer }}</p>
+                    </div>
+                    <div class="uk-card-footer">
+                        <a href="#" class="uk-button uk-button-text">Read more</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+
+    </div>
+
+{% endblock %}

@@ -42,6 +42,18 @@ services:
               }
         public: true
 
+    admin.group_lisson:
+        class: App\Admin\GroupLessonAdmin
+        arguments: [~, App\Entity\GroupLesson, ~]
+        tags:
+            - { name: sonata.admin,
+                manager_type: orm,
+                group: 'Занятия',
+                label: 'Групповые',
+                icon: '<i class="fa fa-futbol-o" aria-hidden="true"></i>'
+              }
+        public: true
+
     twilio_client:
         class: Twilio\Rest\Client
         arguments: ['%env(TWILIO_SID)%', '%env(TWILIO_TOKEN)%']

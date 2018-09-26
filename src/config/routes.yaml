@@ -6,5 +6,9 @@ reset_password:
     path: /reset-password/{slug}
     controller: App\Controller\SecurityController::resetUrl
 
+group_lessons:
+    path: /group-lessons
+    controller: App\Controller\LessonController::groupList
+
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
