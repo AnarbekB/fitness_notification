@@ -10,5 +10,9 @@ group_lessons:
     path: /group-lessons
     controller: App\Controller\LessonController::groupList
 
+subscribe_lesson_type:
+    path: /group-lessons/{code}/subscribe
+    controller: App\Controller\LessonController::subscribeLessonType
+
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"

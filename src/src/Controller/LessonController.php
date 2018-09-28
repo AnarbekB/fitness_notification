@@ -2,29 +2,51 @@
 
 namespace App\Controller;
 
-use App\Entity\GroupLesson;
-use App\Manager\SecurityManagerInterface;
+use App\Entity\GroupLessonType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class LessonController extends AbstractController
 {
 
     /**
-     * @param Request $request
      * @return Response
      */
-    public function groupList(Request $request): Response
+    public function groupList(): Response
     {
-        $groupLissonRepository = $this->getDoctrine()->getRepository(GroupLesson::class);
-        $groupLessons = $groupLissonRepository->findBy(['active' => 1]);
+        $groupLessonTypesRepository = $this->getDoctrine()->getRepository(GroupLessonType::class);
+        $groupLessonTypes = $groupLessonTypesRepository->findBy(['active' => 1]);
 
         return $this->render(
             'fitness/lessons/group_lessons_list.html.twig',
             [
-                'lessons' => $groupLessons
+                'lessonTypes' => $groupLessonTypes
             ]
         );
+    }
+
+    public function subscribeLessonType(string $code)
+    {
+        //todo move this to security access_control
+        //like this - { path: ^/group-lessons/[*]+/subscribe$, roles: ROLE_USER }
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $user = $this->getUser();
+
+        $groupLessonTypesRepository = $this->getDoctrine()->getRepository(GroupLessonType::class);
+        /** @var GroupLessonType $groupLessonType */
+        $groupLessonType = $groupLessonTypesRepository->findOneBy(['code' => $code]);
+
+        if (null == $groupLessonType) {
+            throw new NotFoundHttpException('Lesson not found.');
+        }
+
+        $groupLessonType->addUser($user);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('group_lessons');
     }
 }

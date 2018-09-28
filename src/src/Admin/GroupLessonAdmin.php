@@ -2,7 +2,7 @@
 
 namespace App\Admin;
 
-use App\Constants\LessonType;
+use App\Entity\GroupLessonType;
 use App\Entity\User;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
@@ -11,7 +11,6 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\CoreBundle\Form\Type\BooleanType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -35,8 +34,11 @@ class GroupLessonAdmin extends AbstractAdmin
             'label' => 'Тренер',
             'route' => ['name' => 'show']
         ]);
-        $list->add('type', TextType::class, [
-            'label' => 'Тип занятия'
+        $list->add('lessonType', EntityType::class, [
+            'label' => 'Тип занятия',
+            'class' => GroupLessonType::class,
+            'associated_property' => 'name',
+            'route' => ['name' => 'show']
         ]);
         $list->add('_action', null, [
             'label' => 'Действия',
@@ -70,13 +72,11 @@ class GroupLessonAdmin extends AbstractAdmin
             $form->add('active', BooleanType::class, [
                 'label' => 'Активность'
             ]);
-            $form->add('type', ChoiceType::class, [
+            $form->add('lessonType', EntityType::class, [
                 'label' => 'Тип занятия',
-                'choices' => [
-                    LessonType::HALL => LessonType::HALL(),
-                    LessonType::PARK => LessonType::PARK(),
-                    LessonType::STADIUM => LessonType::STADIUM()
-                ]
+                'class' => GroupLessonType::class,
+                'choice_label' => 'name',
+                'required' => true
             ]);
         $form->end();
     }
@@ -106,8 +106,9 @@ class GroupLessonAdmin extends AbstractAdmin
             $show->add('active', 'boolean', [
                 'label' => 'Активность'
             ]);
-            $show->add('type', TextType::class, [
-                'label' => 'Тип занятия'
+            $show->add('lessonType', null, [
+                'label' => 'Тип занятия',
+                'associated_property' => 'name',
             ]);
         $show->end();
     }
@@ -116,20 +117,6 @@ class GroupLessonAdmin extends AbstractAdmin
     {
         $filter->add('id', null, ['label' => 'Id'], IntegerType::class);
         $filter->add('name', null, ['label' => 'Название'], TextType::class);
-        $filter->add(
-            'type',
-            null,
-            [
-            'label' => 'Тип занятия'
-            ],
-            ChoiceType::class,
-            [
-                'choices' => [
-                    LessonType::HALL => LessonType::HALL(),
-                    LessonType::PARK => LessonType::PARK(),
-                    LessonType::STADIUM => LessonType::STADIUM()
-                ]
-            ]
-        );
+        //todo add filter lessonType
     }
 }

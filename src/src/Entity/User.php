@@ -83,14 +83,14 @@ class User extends BaseUser
     /**
      * @var Collection
      *
-     * @ORM\ManyToMany(targetEntity="GroupLesson", mappedBy="users")
+     * @ORM\ManyToMany(targetEntity="GroupLessonType", mappedBy="users")
      */
-    protected $groupLessons;
+    protected $groupLessonsType;
 
     public function __construct()
     {
         parent::__construct();
-        $this->groupLessons = new ArrayCollection();
+        $this->groupLessonsType = new ArrayCollection();
     }
 
     /**

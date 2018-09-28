@@ -4,9 +4,7 @@ namespace App\Entity;
 
 use App\Entity\EntityTraits\Activity;
 use App\Entity\EntityTraits\Timestamp;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -46,11 +44,11 @@ class GroupLesson
     protected $date;
 
     /**
-     * @var string
+     * @var GroupLessonType
      *
-     * @ORM\Column(type="string")
+     * @ORM\ManyToOne(targetEntity="GroupLessonType", inversedBy="lessons")
      */
-    protected $type;
+    protected $lessonType;
 
     /**
      * @var string
@@ -65,18 +63,6 @@ class GroupLesson
      * @ORM\ManyToOne(targetEntity="User")
      */
     protected $trainer;
-
-    /**
-     * @var Collection
-     *
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="groupLessons")
-     */
-    protected $users;
-
-    public function __construct()
-    {
-        $this->users = new ArrayCollection();
-    }
 
     /**
      * @return int
@@ -121,22 +107,6 @@ class GroupLesson
     /**
      * @return string | null
      */
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param string $type
-     */
-    public function setType(string $type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @return string | null
-     */
     public function getComment(): ?string
     {
         return $this->comment;
@@ -167,29 +137,30 @@ class GroupLesson
     }
 
     /**
-     * @return Collection
+     * @return GroupLessonType | null
      */
-    public function getUsers(): Collection
+    public function getLessonType(): ?GroupLessonType
     {
-        return $this->users;
+        return $this->lessonType;
     }
 
     /**
-     * @param User $user
-     * @return bool
+     * @param GroupLessonType $type
      */
-    public function removeUser(User $user): bool
+    public function setLessonType(GroupLessonType $type)
     {
-        return $this->users->removeElement($user);
+        $this->lessonType = $type;
     }
 
     /**
-     * @param User $user
-     * @return GroupLesson
+     * @return string
      */
-    public function addUser(User $user): GroupLesson
+    public function __toString()
     {
-        $this->users[] = $user;
-        return $this;
+        return sprintf(
+            '%s %s',
+            $this->getName() ? $this->getName() : '',
+            $this->getDate() ? $this->getDate()->format('d.m.Y h:m') : ''
+        );
     }
 }
