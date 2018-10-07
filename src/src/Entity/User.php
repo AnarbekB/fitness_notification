@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use App\Constants\Gender;
-use App\Constants\NotifyTemplate;
 use App\Entity\EntityTraits\Timestamp;
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Twilio\Rest\Client;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity
@@ -79,6 +79,19 @@ class User extends BaseUser
      * @ORM\Column(type="string", nullable=true)
      */
     protected $passwordResetGuid;
+
+    /**
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="GroupLessonType", mappedBy="users")
+     */
+    protected $groupLessonsType;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->groupLessonsType = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -209,6 +222,7 @@ class User extends BaseUser
         $this->passwordResetGuid = $passwordResetGuid;
     }
 
+    //todo move file upload func to upload service
     /**
      * @return null|string
      */
@@ -308,31 +322,6 @@ class User extends BaseUser
 
     public function getFullName() :string
     {
-        return $this->firstName . ' ' . $this->middleName . ' ' . $this->lastName;
-    }
-
-    public function notifySms(NotifyTemplate $template)
-    {
-        $client = new Client(getenv('TWILIO_SID'), getenv('TWILIO_TOKEN'));
-
-        $client->messages->create(
-            $this->phone,
-            [
-                'from' => getenv('TWILIO_FROM'),
-                'body' => placeholders_replace(
-                    $template->getValue(),
-                    [
-                        'fullName' => $this->getFullName(),
-                        'linkSetPassword' =>
-                            'http://fitness.notification.local:8083/reset-password/' . $this->getPasswordResetGuid()
-                    ]
-                )
-            ]
-        );
-    }
-
-    public function notify(object $instance)
-    {
-        $instance->send();
+        return $this->lastName. ' ' . $this->firstName . ' ' . $this->middleName;
     }
 }
