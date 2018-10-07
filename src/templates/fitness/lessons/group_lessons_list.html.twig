@@ -9,10 +9,10 @@
 
     <h2 class=".uk-article">Список групповых занятий:</h2>
 
-    <div class="uk-child-width-1-4 uk-grid-small uk-flex uk-flex-wrap" uk-grid>
+    <div class="uk-child-width-1-4 uk-grid-small" uk-grid>
         {% for lesson in lessonTypes %}
-            <div class="uk-flex">
-                <div class="uk-card uk-card-default uk-card-hover uk-flex ">
+            <div>
+                <div class="uk-card uk-card-default uk-card-hover">
                     <div class="uk-card-media-top">
                         {% if lesson.image != '' %}
                             <img class="image-avatar" src="uploads/group_lessons/{{ lesson.image }}">
@@ -24,7 +24,7 @@
                         <h3 class="uk-card-title">{{ lesson.name }}</h3>
                         <p>{{ lesson.comment }}</p>
                     </div>
-                    <div class="uk-card-footer uk-margin-auto-top">
+                    <div class="uk-card-footer">
                         <a href="{{ path('subscribe_lesson_type', {'code' : lesson.code}) }}" class="uk-button uk-button-text">Подписаться</a>
                     </div>
                 </div>
