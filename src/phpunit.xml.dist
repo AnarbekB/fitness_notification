@@ -16,6 +16,10 @@
         <env name="SHELL_VERBOSITY" value="-1" />
         <env name="DATABASE_URL" value="mysql://fitness:4757@fitness-mysql:3306/fitness_ntf" />
         <!-- define your env variables for the test env here -->
+
+        <!-- ###+ php-amqplib/rabbitmq-bundle ### -->
+        <env name="RABBITMQ_URL" value="amqp://guest:guest@localhost:5672"/>
+        <!-- ###- php-amqplib/rabbitmq-bundle ### -->
     </php>
 
     <testsuites>

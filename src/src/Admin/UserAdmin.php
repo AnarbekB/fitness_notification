@@ -164,7 +164,7 @@ class UserAdmin extends AbstractAdmin
                 ['slug' => $user->getPasswordResetGuid()]
             );
             $notificationTemplate = new RegistrationSuccess($user, $link);
-            $this->notifyService->notify($user, $notificationTemplate);
+            $this->notifyService->notify($notificationTemplate);
         }
     }
 

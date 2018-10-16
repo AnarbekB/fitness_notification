@@ -4,11 +4,11 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Notification\Template\Notification;
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Templating\EngineInterface;
 
 class NotifyService
 {
-    /** @var TwigEngine */
+    /** @var EngineInterface  */
     protected $template;
 
     /** @var \Swift_Mailer */
@@ -18,7 +18,7 @@ class NotifyService
     protected $smsService;
 
     public function __construct(
-        TwigEngine $twigEngine,
+        EngineInterface $twigEngine,
         \Swift_Mailer $mailer,
         TwilioSmsService $smsService
     ) {
@@ -27,13 +27,13 @@ class NotifyService
         $this->smsService = $smsService;
     }
 
-    public function notify(User $user, Notification $template)
+    public function notify(Notification $template)
     {
         if ($template->isToSms()) {
-            $this->toSms($user, $template);
+            $this->toSms($template->getUser(), $template);
         }
         if ($template->isToEmail()) {
-            $this->toEmail($user, $template);
+            $this->toEmail($template->getUser(), $template);
         }
     }
 

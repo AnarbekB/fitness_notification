@@ -2,6 +2,8 @@
 
 namespace App\Notification\Template;
 
+use App\Entity\User;
+
 interface NotificationInterface
 {
     public function getSmsText(): ?string;
@@ -15,4 +17,6 @@ interface NotificationInterface
     public function isToSms(): bool;
 
     public function isToEmail(): bool;
+
+    public function getUser(): User;
 }

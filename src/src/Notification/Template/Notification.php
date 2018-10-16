@@ -2,6 +2,8 @@
 
 namespace App\Notification\Template;
 
+use App\Entity\User;
+
 abstract class Notification implements NotificationInterface
 {
     /** @var  bool */
@@ -19,6 +21,9 @@ abstract class Notification implements NotificationInterface
     /** @var  string | null */
     protected $emailTitle;
 
+    /** @var  User */
+    protected $user;
+
     abstract public function getEmailTitle(): ?string;
 
     abstract public function getParametersForEmail(): ?array;
@@ -30,4 +35,6 @@ abstract class Notification implements NotificationInterface
     abstract public function isToSms(): bool;
 
     abstract public function isToEmail(): bool;
+
+    abstract public function getUser(): User;
 }

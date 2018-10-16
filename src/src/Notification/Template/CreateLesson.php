@@ -4,26 +4,25 @@ namespace App\Notification\Template;
 
 use App\Entity\User;
 
-class RegistrationSuccess extends Notification
+class CreateLesson extends Notification
 {
     protected $toEmail = true;
 
     protected $toSms = false;
 
-    protected $pathToEmailTemplate = 'emails/reset_password.html.twig';
+    /** @var  string | null */
+    protected $smsText = 'test';
 
-    protected $emailTitle = 'Подтверждение регистрации';
+    protected $pathToEmailTemplate = 'emails/create_lessons.html.twig';
+
+    protected $emailTitle = 'Новое занятие';
 
     /** @var User $user */
     protected $user;
 
-    /** @var string $linkSetPassword */
-    protected $linkSetPassword;
-
-    public function __construct(User $user, string $linkSetPassword)
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->linkSetPassword = $linkSetPassword;
     }
 
     public function getEmailTitle(): ?string

@@ -1,0 +1,32 @@
+old_sound_rabbit_mq:
+    connections:
+        default:
+            host:     'fitness-rabbit'
+            port:     5672
+            user:     'rabbitmq'
+            password: 'rabbitmq'
+            vhost:    '/'
+            lazy:     false
+            connection_timeout: 3
+            read_write_timeout: 3
+            keepalive: false
+            heartbeat: 0
+            use_socket: false
+    producers:
+        test:
+            connection:       default
+            exchange_options: { name: 'test', type: direct }
+        notification:
+            connection:       default
+            exchange_options: { name: 'notification', type: direct }
+    consumers:
+        test:
+            connection:       default
+            exchange_options: { name: 'test', type: direct }
+            queue_options:    { name: 'test'}
+            callback:         App\Consumer\TestConsumer
+        notification:
+            connection:       default
+            exchange_options: { name: 'notification', type: direct }
+            queue_options:    { name: 'notification'}
+            callback:         app.consumer.notification

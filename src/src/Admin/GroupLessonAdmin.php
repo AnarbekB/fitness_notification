@@ -2,8 +2,11 @@
 
 namespace App\Admin;
 
+use App\Entity\GroupLesson;
 use App\Entity\GroupLessonType;
 use App\Entity\User;
+use App\Notification\Template\CreateLesson;
+use App\Notification\Template\RegistrationSuccess;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -15,9 +18,19 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use OldSound\RabbitMqBundle\RabbitMq\Producer;
 
 class GroupLessonAdmin extends AbstractAdmin
 {
+    /** @var  Producer */
+    protected $producerMQ;
+
+    public function __construct($code, $class, $baseControllerName, Producer $producer)
+    {
+        parent::__construct($code, $class, $baseControllerName);
+        $this->producerMQ = $producer;
+    }
+
     protected function configureListFields(ListMapper $list)
     {
         $list->add('id', IntegerType::class, [
@@ -118,5 +131,20 @@ class GroupLessonAdmin extends AbstractAdmin
         $filter->add('id', null, ['label' => 'Id'], IntegerType::class);
         $filter->add('name', null, ['label' => 'Название'], TextType::class);
         //todo add filter lessonType
+    }
+
+    /**
+     * @param GroupLesson $object
+     */
+    public function postPersist($object)
+    {
+        if ($object instanceof GroupLesson) {
+            $users = $object->getLessonType()->getUsers();
+            $template = null;
+            foreach ($users as $user) {
+                $template = new CreateLesson($user);
+                $this->producerMQ->publish(serialize($template));
+            }
+        }
     }
 }
