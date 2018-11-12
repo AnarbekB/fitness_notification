@@ -3,7 +3,8 @@
 namespace App\Menu;
 
 use App\Entity\Menu;
-use App\Repository\MenuRepository;
+use App\Entity\TypeMenu;
+use App\Repository\TypeMenuRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
@@ -21,8 +22,8 @@ class MenuBuilder
     /** @var EntityManagerInterface */
     private $em;
 
-    /** @var MenuRepository */
-    private $menuRepository;
+    /** @var TypeMenuRepository */
+    private $typeMenuRepository;
 
     /**
      * @param FactoryInterface $factory
@@ -37,7 +38,7 @@ class MenuBuilder
         $this->factory = $factory;
         $this->container = $container;
         $this->em = $entityManager;
-        $this->menuRepository = $this->em->getRepository(Menu::class);
+        $this->typeMenuRepository = $this->em->getRepository(TypeMenu::class);
     }
 
     public function createMainMenu()
@@ -76,6 +77,6 @@ class MenuBuilder
 
     public function getMainMenu()
     {
-        return $this->menuRepository->getMainMenu();
+        return $this->typeMenuRepository->getMainMenu();
     }
 }

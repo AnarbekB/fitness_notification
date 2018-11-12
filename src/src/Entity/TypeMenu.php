@@ -34,9 +34,16 @@ class TypeMenu
     protected $name;
 
     /**
-     * @var Menu
+     * @var string
      *
-     * @ORM\OneToMany(targetEntity="Menu", mappedBy="typeMenu")
+     * @ORM\Column(type="string", unique=true, nullable=false)
+     */
+    protected $code;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Menu", mappedBy="typeMenu", cascade={"remove"})
      */
     protected $menu;
 
@@ -68,6 +75,25 @@ class TypeMenu
     public function setName(string $name): TypeMenu
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return null | string
+     */
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param $code
+     * @return TypeMenu
+     */
+    public function setCode($code): TypeMenu
+    {
+        $this->code = $code;
 
         return $this;
     }
