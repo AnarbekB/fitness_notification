@@ -54,6 +54,41 @@ services:
               }
         public: true
 
+    admin.menu:
+        class: App\Admin\MenuAdmin
+        arguments: [~, App\Entity\Menu, ~]
+        tags:
+            - { name: sonata.admin,
+                manager_type: orm,
+                group: 'Меню',
+                label: 'Меню',
+                icon: '<i class="fa fa-bars" aria-hidden="true"></i>'
+              }
+        public: true
+
+    admin.type_menu:
+        class: App\Admin\TypeMenuAdmin
+        arguments: [~, App\Entity\TypeMenu, ~]
+        tags:
+            - { name: sonata.admin,
+                manager_type: orm,
+                group: 'Меню',
+                label: 'Типы меню',
+                  icon: '<i class="fa fa-bars" aria-hidden="true"></i>'
+              }
+        public: true
+
+    app.menu_builder:
+        class: App\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory", "@service_container", "@doctrine.orm.entity_manager"]
+
+    app.main_menu:
+        class: Knp\Menu\MenuItem # the service definition requires setting the class
+        factory: ["@app.menu_builder", createMainMenu]
+        arguments: ["@request_stack"]
+        tags:
+            - { name: knp_menu.menu, alias: main }
+
     admin.group_lesson_type:
         class: App\Admin\GroupLessonTypeAdmin
         arguments: [~, App\Entity\GroupLessonType, ~]

@@ -20,3 +20,6 @@ todo:
 - rabbitmq
 - notify service +
 - subscription to classes
+
+fixtures:
+$php bin/console doctrine:fixtures:load --append
