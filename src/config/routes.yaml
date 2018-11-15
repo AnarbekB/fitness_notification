@@ -1,3 +1,6 @@
+fos_user:
+    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
 homepage:
     path: /
     controller: App\Controller\IndexController::index
@@ -8,11 +11,20 @@ reset_password:
 
 group_lessons:
     path: /group-lessons
-    controller: App\Controller\LessonController::groupList
+    controller: App\Controller\LessonController::groupListAction
 
 subscribe_lesson_type:
-    path: /group-lessons/{code}/subscribe
-    controller: App\Controller\LessonController::subscribeLessonType
+    path: /group-lessons/{code}/subscribe/{redirectRoute}
+    controller: App\Controller\LessonController::subscribeLessonTypeAction
 
-fos_user:
-    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+un_subscribe_lesson_type:
+    path: /group-lessons/{code}/un_subscribe_lesson_type/{redirectRoute}
+    controller: App\Controller\LessonController::unSubscribeLessonTypeAction
+
+fos_user_profile_show:
+    path: /profile
+    controller: App\Controller\ProfileController::showAction
+
+change_channel_notification:
+    path: /channel/change/notification/{channel}
+    controller: App\Controller\ProfileController::changeChannelNotificationAction

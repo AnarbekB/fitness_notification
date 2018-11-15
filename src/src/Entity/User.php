@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Constants\ChannelNotification;
 use App\Constants\Gender;
 use App\Entity\EntityTraits\Timestamp;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -79,6 +80,12 @@ class User extends BaseUser
      * @ORM\Column(type="string", nullable=true)
      */
     protected $passwordResetGuid;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    protected $channelNotification = ChannelNotification::EMAIL;
 
     /**
      * @var Collection
@@ -220,6 +227,33 @@ class User extends BaseUser
     public function setPasswordResetGuid(string $passwordResetGuid)
     {
         $this->passwordResetGuid = $passwordResetGuid;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getGroupLessonsType(): Collection
+    {
+        return $this->groupLessonsType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getChannelNotification(): ?string
+    {
+        return $this->channelNotification;
+    }
+
+    /**
+     * @param ChannelNotification $channelNotification
+     * @return User
+     */
+    public function setChannelNotification(ChannelNotification $channelNotification): User
+    {
+        $this->channelNotification = $channelNotification->getValue();
+
+        return $this;
     }
 
     //todo move file upload func to upload service
