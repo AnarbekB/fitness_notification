@@ -10,6 +10,8 @@ interface NotificationInterface
 
     public function getParametersForEmail(): ?array;
 
+    public function setParametersForEmail();
+
     public function getPathToEmailTemplate(): ?string;
 
     public function getEmailTitle(): ?string;

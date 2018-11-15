@@ -21,12 +21,17 @@ abstract class Notification implements NotificationInterface
     /** @var  string | null */
     protected $emailTitle;
 
+    /** @var array | null */
+    protected $paramForEmail;
+
     /** @var  User */
     protected $user;
 
     abstract public function getEmailTitle(): ?string;
 
     abstract public function getParametersForEmail(): ?array;
+
+    abstract public function setParametersForEmail();
 
     abstract public function getSmsText(): ?string;
 

@@ -2,6 +2,7 @@
 
 namespace App\Notification\Template;
 
+use App\Entity\GroupLesson;
 use App\Entity\User;
 
 class CreateLesson extends Notification
@@ -13,6 +14,9 @@ class CreateLesson extends Notification
     /** @var  string | null */
     protected $smsText = 'test';
 
+    /** @var array | null */
+    protected $paramForEmail;
+
     protected $pathToEmailTemplate = 'emails/create_lessons.html.twig';
 
     protected $emailTitle = 'Новое занятие';
@@ -20,9 +24,14 @@ class CreateLesson extends Notification
     /** @var User $user */
     protected $user;
 
-    public function __construct(User $user)
+    /** @var GroupLesson $lesson */
+    protected $lesson;
+
+    public function __construct(User $user, GroupLesson $lesson)
     {
         $this->user = $user;
+        $this->lesson = $lesson;
+        $this->setParametersForEmail();
     }
 
     public function getEmailTitle(): ?string
@@ -35,12 +44,20 @@ class CreateLesson extends Notification
         return $this->pathToEmailTemplate;
     }
 
+    public function setParametersForEmail()
+    {
+        $this->paramForEmail = [
+            'fullName' => $this->user->getFullName(),
+            'lessonType' => $this->lesson->getLessonType()->getName(),
+            'time' => $this->lesson->getDate(),
+            'comment' => $this->lesson->getComment(),
+            'lessonsName' => $this->lesson->getName()
+        ];
+    }
+
     public function getParametersForEmail(): ?array
     {
-        return [
-            'fullName' => $this->user->getFullName(),
-            'user' => $this->user
-        ];
+        return $this->paramForEmail;
     }
 
     public function getSmsText(): ?string

@@ -6,7 +6,6 @@ use App\Entity\GroupLesson;
 use App\Entity\GroupLessonType;
 use App\Entity\User;
 use App\Notification\Template\CreateLesson;
-use App\Notification\Template\RegistrationSuccess;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -142,7 +141,7 @@ class GroupLessonAdmin extends AbstractAdmin
             $users = $object->getLessonType()->getUsers();
             $template = null;
             foreach ($users as $user) {
-                $template = new CreateLesson($user);
+                $template = new CreateLesson($user, $object);
                 $this->producerMQ->publish(serialize($template));
             }
         }

@@ -8,6 +8,9 @@ class RegistrationSuccess extends Notification
 {
     protected $toEmail = true;
 
+    /** @var  array | null */
+    protected $paramForEmail;
+
     protected $toSms = false;
 
     protected $pathToEmailTemplate = 'emails/reset_password.html.twig';
@@ -17,13 +20,10 @@ class RegistrationSuccess extends Notification
     /** @var User $user */
     protected $user;
 
-    /** @var string $linkSetPassword */
-    protected $linkSetPassword;
-
-    public function __construct(User $user, string $linkSetPassword)
+    public function __construct(User $user)
     {
         $this->user = $user;
-        $this->linkSetPassword = $linkSetPassword;
+        $this->setParametersForEmail();
     }
 
     public function getEmailTitle(): ?string
@@ -36,12 +36,18 @@ class RegistrationSuccess extends Notification
         return $this->pathToEmailTemplate;
     }
 
+    public function setParametersForEmail()
+    {
+        $this->paramForEmail = [
+            'fullName' => $this->user->getFullName(),
+            'projectUrl' => getenv('PROJECT_URL'),
+            'passwordResetGuid' => $this->user->getPasswordResetGuid()
+        ];
+    }
+
     public function getParametersForEmail(): ?array
     {
-        return [
-            'fullName' => $this->user->getFullName(),
-            'user' => $this->user
-        ];
+        return $this->paramForEmail;
     }
 
     public function getSmsText(): ?string

@@ -32,7 +32,7 @@ services:
 
     admin.user:
         class: App\Admin\UserAdmin
-        arguments: [~, App\Entity\User, ~]
+        arguments: [~, App\Entity\User, ~, "@service_container", '@old_sound_rabbit_mq.notification_producer']
         tags:
             - { name: sonata.admin,
                 manager_type: orm,

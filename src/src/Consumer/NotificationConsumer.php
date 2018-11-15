@@ -26,7 +26,5 @@ class NotificationConsumer implements ConsumerInterface
         $template = unserialize($msg->getBody());
 
         $this->notifyService->notify($template);
-
-        echo 'Complete' . PHP_EOL;
     }
 }
