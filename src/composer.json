@@ -9,6 +9,7 @@
         "giggsey/libphonenumber-for-php": "^8.9",
         "knplabs/knp-menu-bundle": "^2.0",
         "myclabs/php-enum": "^1.6",
+        "php-amqplib/rabbitmq-bundle": "^1.14",
         "ramsey/uuid": "^3.8",
         "sensio/framework-extra-bundle": "^5.1",
         "sonata-project/admin-bundle": "^3.37",

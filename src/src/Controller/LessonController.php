@@ -30,6 +30,7 @@ class LessonController extends AbstractController
     {
         //todo move this to security access_control
         //like this - { path: ^/group-lessons/[*]+/subscribe$, roles: ROLE_USER }
+        //todo check for a valid subscription
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
         }

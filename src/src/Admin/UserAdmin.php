@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Notification\Template\RegistrationSuccess;
 use App\Service\NotifyService;
 use Doctrine\ORM\EntityManagerInterface;
+use OldSound\RabbitMqBundle\RabbitMq\Producer;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
@@ -31,16 +32,21 @@ class UserAdmin extends AbstractAdmin
     /** @var NotifyService */
     protected $notifyService;
 
+    /** @var  Producer */
+    protected $producerMQ;
+
     public function __construct(
         $code,
         $class,
         $baseControllerName,
-        ContainerInterface $container
+        ContainerInterface $container,
+        Producer $producer
     ) {
         parent::__construct($code, $class, $baseControllerName);
         $this->container = $container;
         $this->notifyService = $this->container->get('notify_service');
         $this->em = $this->container->get('doctrine.orm.entity_manager');
+        $this->producerMQ = $producer;
     }
 
     protected function configureFormFields(FormMapper $form)
@@ -159,12 +165,8 @@ class UserAdmin extends AbstractAdmin
     public function postPersist($user)
     {
         if ($user instanceof User) {
-            $link = $this->container->get('router')->generate(
-                'reset_password',
-                ['slug' => $user->getPasswordResetGuid()]
-            );
-            $notificationTemplate = new RegistrationSuccess($user, $link);
-            $this->notifyService->notify($user, $notificationTemplate);
+            $notificationTemplate = new RegistrationSuccess($user);
+            $this->producerMQ->publish(serialize($notificationTemplate));
         }
     }
 

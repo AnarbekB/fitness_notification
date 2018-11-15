@@ -209,7 +209,7 @@ class User extends BaseUser
     /**
      * @return string
      */
-    public function getPasswordResetGuid(): string
+    public function getPasswordResetGuid(): ?string
     {
         return $this->passwordResetGuid;
     }

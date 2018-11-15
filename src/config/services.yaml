@@ -32,7 +32,7 @@ services:
 
     admin.user:
         class: App\Admin\UserAdmin
-        arguments: [~, App\Entity\User, ~]
+        arguments: [~, App\Entity\User, ~, "@service_container", '@old_sound_rabbit_mq.notification_producer']
         tags:
             - { name: sonata.admin,
                 manager_type: orm,
@@ -44,7 +44,7 @@ services:
 
     admin.group_lesson:
         class: App\Admin\GroupLessonAdmin
-        arguments: [~, App\Entity\GroupLesson, ~]
+        arguments: [~, App\Entity\GroupLesson, ~, '@old_sound_rabbit_mq.notification_producer']
         tags:
             - { name: sonata.admin,
                 manager_type: orm,
@@ -105,13 +105,23 @@ services:
         class: Twilio\Rest\Client
         arguments: ['%env(TWILIO_SID)%', '%env(TWILIO_TOKEN)%']
         public: true
+        autowire: true
+        autoconfigure: true
+
+    sms_service:
+        class: App\Service\TwilioSmsService
+        arguments: ['@twilio_client']
+        public: true
+        autowire: true
+        autoconfigure: true
 
     notify_service:
         class: App\Service\NotifyService
         public: true
-        arguments: ['@templating.engine.twig', '@swiftmailer.mailer.default',  '@sms_service']
+        autowire: true
+        autoconfigure: true
+        arguments: ['@templating', '@swiftmailer.mailer.default',  '@sms_service']
 
-    sms_service:
-        class: App\Service\TwilioSmsService
-        public: true
-        arguments: ['@twilio_client']
+    app.consumer.notification:
+        class: App\Consumer\NotificationConsumer
+        arguments: ['@service_container']

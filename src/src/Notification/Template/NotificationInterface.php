@@ -2,11 +2,15 @@
 
 namespace App\Notification\Template;
 
+use App\Entity\User;
+
 interface NotificationInterface
 {
     public function getSmsText(): ?string;
 
     public function getParametersForEmail(): ?array;
+
+    public function setParametersForEmail();
 
     public function getPathToEmailTemplate(): ?string;
 
@@ -15,4 +19,6 @@ interface NotificationInterface
     public function isToSms(): bool;
 
     public function isToEmail(): bool;
+
+    public function getUser(): User;
 }

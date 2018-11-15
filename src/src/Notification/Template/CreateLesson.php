@@ -2,27 +2,35 @@
 
 namespace App\Notification\Template;
 
+use App\Entity\GroupLesson;
 use App\Entity\User;
 
-class RegistrationSuccess extends Notification
+class CreateLesson extends Notification
 {
     protected $toEmail = true;
 
-    /** @var  array | null */
-    protected $paramForEmail;
-
     protected $toSms = false;
 
-    protected $pathToEmailTemplate = 'emails/reset_password.html.twig';
+    /** @var  string | null */
+    protected $smsText = 'test';
 
-    protected $emailTitle = 'Подтверждение регистрации';
+    /** @var array | null */
+    protected $paramForEmail;
+
+    protected $pathToEmailTemplate = 'emails/create_lessons.html.twig';
+
+    protected $emailTitle = 'Новое занятие';
 
     /** @var User $user */
     protected $user;
 
-    public function __construct(User $user)
+    /** @var GroupLesson $lesson */
+    protected $lesson;
+
+    public function __construct(User $user, GroupLesson $lesson)
     {
         $this->user = $user;
+        $this->lesson = $lesson;
         $this->setParametersForEmail();
     }
 
@@ -40,8 +48,10 @@ class RegistrationSuccess extends Notification
     {
         $this->paramForEmail = [
             'fullName' => $this->user->getFullName(),
-            'projectUrl' => getenv('PROJECT_URL'),
-            'passwordResetGuid' => $this->user->getPasswordResetGuid()
+            'lessonType' => $this->lesson->getLessonType()->getName(),
+            'time' => $this->lesson->getDate(),
+            'comment' => $this->lesson->getComment(),
+            'lessonsName' => $this->lesson->getName()
         ];
     }
 
