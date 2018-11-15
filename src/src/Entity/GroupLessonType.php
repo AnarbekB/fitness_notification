@@ -63,7 +63,7 @@ class GroupLessonType
     /**
      * @var Collection
      *
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="groupLessons")
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="groupLessonsType")
      */
     protected $users;
 

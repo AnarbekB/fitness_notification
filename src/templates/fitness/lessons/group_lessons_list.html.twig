@@ -25,7 +25,26 @@
                         <p>{{ lesson.comment }}</p>
                     </div>
                     <div class="uk-card-footer">
-                        <a href="{{ path('subscribe_lesson_type', {'code' : lesson.code}) }}" class="uk-button uk-button-text">Подписаться</a>
+                        {% if user %}
+                            {% set visible = false %}
+                            {% for userLesson in user.groupLessonsType %}
+                                {% if userLesson.code == lesson.code %}
+                                    <a href="{{ path('un_subscribe_lesson_type',{'code' : lesson.code, 'redirectRoute' : 'group_lessons'}) }}" class="uk-button uk-button-text">
+                                        Отписаться
+                                    </a>
+                                    {% set visible = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if visible == false %}
+                                <a href="{{ path('subscribe_lesson_type', {'code' : lesson.code, 'redirectRoute' : 'group_lessons'}) }}" class="uk-button uk-button-text">
+                                    Подписаться
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            <a href="{{ path('subscribe_lesson_type', {'code' : lesson.code, 'redirectRoute' : 'group_lessons'}) }}" class="uk-button uk-button-text">
+                                Подписаться
+                                </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
