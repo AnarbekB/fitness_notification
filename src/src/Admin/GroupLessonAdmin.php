@@ -2,6 +2,7 @@
 
 namespace App\Admin;
 
+use App\Constants\ChannelNotification;
 use App\Entity\GroupLesson;
 use App\Entity\GroupLessonType;
 use App\Entity\User;
@@ -140,9 +141,12 @@ class GroupLessonAdmin extends AbstractAdmin
         if ($object instanceof GroupLesson) {
             $users = $object->getLessonType()->getUsers();
             $template = null;
+            /** @var User $user */
             foreach ($users as $user) {
-                $template = new CreateLesson($user, $object);
-                $this->producerMQ->publish(serialize($template));
+                if ($user->getChannelNotification() != ChannelNotification::NOTHING()->getValue()) {
+                    $template = new CreateLesson($user, $object);
+                    $this->producerMQ->publish(serialize($template));
+                }
             }
         }
     }

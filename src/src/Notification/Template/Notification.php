@@ -35,6 +35,8 @@ abstract class Notification implements NotificationInterface
 
     abstract public function getSmsText(): ?string;
 
+    abstract public function setSmsText();
+
     abstract public function getPathToEmailTemplate(): ?string;
 
     abstract public function isToSms(): bool;
