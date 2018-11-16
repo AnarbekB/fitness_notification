@@ -2,17 +2,18 @@
 
 namespace App\Notification\Template;
 
+use App\Constants\ChannelNotification;
 use App\Entity\GroupLesson;
 use App\Entity\User;
 
 class CreateLesson extends Notification
 {
-    protected $toEmail = true;
+    protected $toEmail = false;
 
     protected $toSms = false;
 
     /** @var  string | null */
-    protected $smsText = 'test';
+    protected $smsText = '{name}, занятие по подписке({lessonType}): {lessonName}. Дата: {date}. Комментарий : {lessonComment}. Тренер: {trainer}';
 
     /** @var array | null */
     protected $paramForEmail;
@@ -32,6 +33,13 @@ class CreateLesson extends Notification
         $this->user = $user;
         $this->lesson = $lesson;
         $this->setParametersForEmail();
+        $this->setSmsText();
+        if ($user->getChannelNotification() == ChannelNotification::EMAIL()->getValue()) {
+            $this->toEmail = true;
+        }
+        if ($user->getChannelNotification() == ChannelNotification::PHONE()->getValue()) {
+            $this->toSms = true;
+        }
     }
 
     public function getEmailTitle(): ?string
@@ -51,7 +59,8 @@ class CreateLesson extends Notification
             'lessonType' => $this->lesson->getLessonType()->getName(),
             'time' => $this->lesson->getDate(),
             'comment' => $this->lesson->getComment(),
-            'lessonsName' => $this->lesson->getName()
+            'lessonsName' => $this->lesson->getName(),
+            'trainer' => $this->lesson->getTrainer()->getFullName()
         ];
     }
 
@@ -60,9 +69,24 @@ class CreateLesson extends Notification
         return $this->paramForEmail;
     }
 
+    public function setSmsText()
+    {
+        $this->smsText = placeholders_replace(
+            $this->smsText,
+            [
+                'name' => $this->user->getFirstName(),
+                'lessonName' => $this->lesson->getName(),
+                'date' => $this->lesson->getDate()->format('Y-m-d H:i:s'),
+                'lessonComment' => $this->lesson->getComment(),
+                'lessonType' => $this->lesson->getLessonType()->getName(),
+                'trainer' => $this->lesson->getTrainer()->getFullName()
+            ]
+        );
+    }
+
     public function getSmsText(): ?string
     {
-        return null;
+        return $this->smsText;
     }
 
     /**

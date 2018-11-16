@@ -8,6 +8,8 @@ interface NotificationInterface
 {
     public function getSmsText(): ?string;
 
+    public function setSmsText();
+
     public function getParametersForEmail(): ?array;
 
     public function setParametersForEmail();

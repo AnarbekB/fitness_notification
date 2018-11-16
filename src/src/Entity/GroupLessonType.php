@@ -14,7 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Class GroupLessonType
  * @package App\Entity
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\GroupLessonTypeRepository")
  * @ORM\Table(name="group_lesson_types")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields={"code"}, message="Занятие с указанным кодом уже существует")

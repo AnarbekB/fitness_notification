@@ -50,9 +50,14 @@ class RegistrationSuccess extends Notification
         return $this->paramForEmail;
     }
 
+    public function setSmsText()
+    {
+        $this->smsText = null;
+    }
+
     public function getSmsText(): ?string
     {
-        return null;
+        return $this->smsText;
     }
 
     /**
