@@ -22,6 +22,8 @@ class CreateLesson extends Notification
 
     protected $emailTitle = 'Новое занятие';
 
+    protected $emailCustomMessage = null;
+
     /** @var User $user */
     protected $user;
 
@@ -52,7 +54,7 @@ class CreateLesson extends Notification
         return $this->pathToEmailTemplate;
     }
 
-    public function setParametersForEmail()
+    public function setParametersForEmail(array $fields = null)
     {
         $this->paramForEmail = [
             'fullName' => $this->user->getFullName(),
@@ -69,7 +71,17 @@ class CreateLesson extends Notification
         return $this->paramForEmail;
     }
 
-    public function setSmsText()
+    public function setEmailCustomMessage(array $fields = null)
+    {
+        $this->emailCustomMessage = null;
+    }
+
+    public function getEmailCustomMessage(): ?string
+    {
+        return $this->emailCustomMessage;
+    }
+
+    public function setSmsText(array $fields = null)
     {
         $this->smsText = placeholders_replace(
             $this->smsText,

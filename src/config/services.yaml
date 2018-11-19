@@ -44,7 +44,7 @@ services:
 
     admin.group_lesson:
         class: App\Admin\GroupLessonAdmin
-        arguments: [~, App\Entity\GroupLesson, ~, '@old_sound_rabbit_mq.notification_producer']
+        arguments: [~, App\Entity\GroupLesson, App\Controller\Admin\GroupLessonController, '@old_sound_rabbit_mq.notification_producer']
         tags:
             - { name: sonata.admin,
                 manager_type: orm,

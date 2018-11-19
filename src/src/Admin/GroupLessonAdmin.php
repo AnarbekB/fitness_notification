@@ -11,6 +11,7 @@ use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\CoreBundle\Form\Type\BooleanType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -29,6 +30,17 @@ class GroupLessonAdmin extends AbstractAdmin
     {
         parent::__construct($code, $class, $baseControllerName);
         $this->producerMQ = $producer;
+    }
+
+    public function configure()
+    {
+        $this->setTemplate('show', 'fitness/admin/group_lesson/show.html.twig');
+    }
+
+    protected function configureRoutes(RouteCollection $collection)
+    {
+        $collection->add('send_sms', $this->getRouterIdParameter() . '/sms/send');
+        $collection->add('send_email', $this->getRouterIdParameter(). '/email/send');
     }
 
     protected function configureListFields(ListMapper $list)
