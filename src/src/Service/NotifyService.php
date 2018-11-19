@@ -48,10 +48,12 @@ class NotifyService
             ->setFrom(getenv('MAILER_FROM'))
             ->setTo($user->getEmail())
             ->setBody(
-                $this->template->render(
-                    $template->getPathToEmailTemplate(),
-                    $template->getParametersForEmail()
-                ),
+                $template->getPathToEmailTemplate() ?
+                    $this->template->render(
+                        $template->getPathToEmailTemplate(),
+                        $template->getParametersForEmail()
+                    ) :
+                    $template->getEmailCustomMessage(),
                 'text/html'
             );
 
