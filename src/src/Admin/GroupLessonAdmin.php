@@ -155,7 +155,7 @@ class GroupLessonAdmin extends AbstractAdmin
             $template = null;
             /** @var User $user */
             foreach ($users as $user) {
-                if ($user->getChannelNotification() != ChannelNotification::NOTHING()->getValue()) {
+                if ($user->isCanGetNotification()) {
                     $template = new CreateLesson($user, $object);
                     $this->producerMQ->publish(serialize($template));
                 }

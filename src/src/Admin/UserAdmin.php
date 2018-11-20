@@ -13,6 +13,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\CoreBundle\Form\Type\BooleanType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -69,6 +70,13 @@ class UserAdmin extends AbstractAdmin
             $form->add('phone', TelType::class, ['label' => 'Телефон']);
         $form->end();
         $form->with('Дополнительное', ['class' => 'col-sm-3']);
+            $form->add('enabled', BooleanType::class, [
+                'label' => 'Активен',
+                'choices' => [
+                    'Да' => 1,
+                    'Нет' => 0
+                ]
+            ]);
             $form->add('gender', ChoiceType::class, [
                 'label' => 'Пол',
                 'choices'  => [
@@ -107,6 +115,9 @@ class UserAdmin extends AbstractAdmin
             $show->add('phone');
         $show->end();
         $show->with('Дополнительно', ['class' => 'col-sm-3']);
+            $show->add('enabled', null, [
+                'label' => 'Активен'
+            ]);
             $show->add('gender');
             $show->add('dateOfBirth');
             $show->add('profilePhoto', null, [ //todo view image in detail
@@ -135,6 +146,7 @@ class UserAdmin extends AbstractAdmin
         $list->add('gender');
         $list->add('email');
         $list->add('phone');
+        $list->add('enabled');
         $list->add('_action', null, [
            'actions' => [
                'show' => [],

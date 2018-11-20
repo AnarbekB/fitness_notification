@@ -36,7 +36,7 @@ class GroupLessonController extends CRUDController
         $template = null;
         /** @var User $user */
         foreach ($users as $user) {
-            if ($user->getChannelNotification() != ChannelNotification::NOTHING()->getValue()) {
+            if ($user->isCanGetNotification()) {
                 $template = new CustomMessage($user, $groupLesson, $placeholders[1], $text);
                 $this->producerMQ->publish(serialize($template));
             }
@@ -59,7 +59,7 @@ class GroupLessonController extends CRUDController
         $template = null;
         /** @var User $user */
         foreach ($users as $user) {
-            if ($user->getChannelNotification() != ChannelNotification::NOTHING()->getValue()) {
+            if ($user->isCanGetNotification()) {
                 $template = new CustomMessage($user, $groupLesson, null, null, $placeholders[1], $text);
                 $this->producerMQ->publish(serialize($template));
             }
