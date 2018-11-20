@@ -409,4 +409,15 @@ class User extends BaseUser
     {
         return $this->lastName. ' ' . $this->firstName . ' ' . $this->middleName;
     }
+
+    public function isCanGetNotification(): bool
+    {
+        if ($this->getChannelNotification() !== ChannelNotification::NOTHING()->getValue() &&
+        $this->isEnabled()
+        ) {
+            return true;
+        }
+
+        return false;
+    }
 }
