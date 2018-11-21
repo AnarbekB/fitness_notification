@@ -66,7 +66,7 @@ class UserAdmin extends AbstractAdmin
             $form->add('firstName', TextType::class, ['label' => 'Имя']);
             $form->add('lastName', TextType::class, ['label' => 'Фамилия']);
             $form->add('middleName', TextType::class, ['label' => 'Отчество']);
-            $form->add('email', EmailType::class, ['label' => 'Email']);
+            $form->add('email', EmailType::class, ['label' => 'Email', 'disabled' => true]);
             $form->add('phone', TelType::class, ['label' => 'Телефон']);
         $form->end();
         $form->with('Дополнительное', ['class' => 'col-sm-3']);
