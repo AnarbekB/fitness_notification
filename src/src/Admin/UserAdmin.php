@@ -6,6 +6,7 @@ use App\Constants\Gender;
 use App\Entity\User;
 use App\Notification\Template\RegistrationSuccess;
 use App\Service\NotifyService;
+use App\Service\UploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use OldSound\RabbitMqBundle\RabbitMq\Producer;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
@@ -36,18 +37,23 @@ class UserAdmin extends AbstractAdmin
     /** @var  Producer */
     protected $producerMQ;
 
+    /** @var UploadService */
+    protected $uploadService;
+
     public function __construct(
         $code,
         $class,
         $baseControllerName,
         ContainerInterface $container,
-        Producer $producer
+        Producer $producer,
+        UploadService $uploadService
     ) {
         parent::__construct($code, $class, $baseControllerName);
         $this->container = $container;
         $this->notifyService = $this->container->get('notify_service');
         $this->em = $this->container->get('doctrine.orm.entity_manager');
         $this->producerMQ = $producer;
+        $this->uploadService = $uploadService;
     }
 
     protected function configureFormFields(FormMapper $form)
@@ -58,8 +64,7 @@ class UserAdmin extends AbstractAdmin
         $imagePath = null;
         $imageEmbed = '';
         if ($user->getProfilePhoto()) {
-            $imagePath = $user->getWebPath();
-            $imageEmbed = '<img src="/'.$imagePath.'" class="admin-preview" />';
+            $imageEmbed = '<img src="/'.$user->getProfilePhoto().'" class="admin-preview" />';
         }
 
         $form->with('Основное', ['class' => 'col-sm-9']);
@@ -102,7 +107,6 @@ class UserAdmin extends AbstractAdmin
         $imagePath = null;
         $imageEmbed = '';
         if ($user->getProfilePhoto()) {
-            $imagePath = $user->getWebPath();
             $imageEmbed = '<img src="/'.$imagePath.'" class="admin-preview" />';
         }
 
@@ -184,7 +188,6 @@ class UserAdmin extends AbstractAdmin
 
     public function saveFile(User $user)
     {
-        $basePath = $this->getRequest()->getBasePath();
-        $user->upload($basePath);
+        $user->setProfilePhoto($this->uploadService->upload($this->classnameLabel, $user->getFile()));
     }
 }

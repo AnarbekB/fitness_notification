@@ -15,7 +15,7 @@
                 <div class="uk-card uk-card-default uk-card-hover">
                     <div class="uk-card-media-top">
                         {% if lesson.image != '' %}
-                            <img class="image-avatar" src="uploads/group_lessons/{{ lesson.image }}">
+                            <img class="image-avatar" src="{{ lesson.image }}">
                         {% else %}
                             <img class="image-avatar" src="img/avatar.jpg" alt="">
                         {% endif %}

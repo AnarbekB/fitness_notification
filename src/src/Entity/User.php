@@ -307,47 +307,11 @@ class User extends BaseUser
         return $this;
     }
 
-    //todo move file upload func to upload service
-    /**
-     * @return null|string
-     */
-    public function getAbsolutePath()
-    {
-        return null === $this->profilePhoto ? null : $this->getUploadRootDir(kernel_path()).'/'.$this->profilePhoto;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getWebPath()
-    {
-        return null === $this->profilePhoto ? null : $this->getUploadDir().'/'.$this->profilePhoto;
-    }
-
-    /**
-     * @param string $basepath
-     * @return string
-     */
-    protected function getUploadRootDir($basepath = '/')
-    {
-        // the absolute directory path where uploaded documents should be saved
-        return $basepath . $this->getUploadDir();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getUploadDir()
-    {
-        //todo this value in config
-        return 'uploads/users';
-    }
-
     /**
      * @param string $fileName
      * @return $this
      */
-    protected function setImageName(string $fileName)
+    public function setProfilePhoto(string $fileName)
     {
         $this->profilePhoto = $fileName;
 
@@ -360,28 +324,6 @@ class User extends BaseUser
     public function getProfilePhoto(): ?string
     {
         return $this->profilePhoto;
-    }
-
-    /**
-     * Upload file
-     *
-     * @param string $basepath
-     */
-    public function upload(string $basepath)
-    {
-        if (null === $this->file) {
-            return;
-        }
-
-        if (null === $basepath) {
-            return;
-        }
-
-        $this->file->move($this->getUploadRootDir($basepath), $this->file->getClientOriginalName());
-
-        $this->setImageName($this->file->getClientOriginalName());
-
-        $this->file = null;
     }
 
     /**
