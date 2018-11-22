@@ -3,6 +3,7 @@
 namespace App\Admin;
 
 use App\Entity\GroupLessonType;
+use App\Service\UploadService;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -15,6 +16,20 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class GroupLessonTypeAdmin extends AbstractAdmin
 {
+    /** @var UploadService */
+    protected $uploadService;
+
+    public function __construct(
+        $code,
+        $class,
+        $baseControllerName,
+        UploadService $uploadService
+    ) {
+        parent::__construct($code, $class, $baseControllerName);
+
+        $this->uploadService = $uploadService;
+    }
+
     protected function configureListFields(ListMapper $list)
     {
         $list->add('id', IntegerType::class, [
@@ -74,8 +89,7 @@ class GroupLessonTypeAdmin extends AbstractAdmin
         $imagePath = null;
         $imageEmbed = '';
         if ($groupLessonType->getImage()) {
-            $imagePath = $groupLessonType->getWebPath();
-            $imageEmbed = '<img src="/'.$imagePath.'" class="admin-preview" />';
+            $imageEmbed = '<img src="/'.$groupLessonType->getImage().'" class="admin-preview" />';
         }
 
         $form->add('name', TextType::class, [
@@ -112,7 +126,6 @@ class GroupLessonTypeAdmin extends AbstractAdmin
 
     public function saveFile(GroupLessonType $lessonType)
     {
-        $basePath = $this->getRequest()->getBasePath();
-        $lessonType->upload($basePath);
+        $lessonType->setImage($this->uploadService->upload($this->classnameLabel, $lessonType->getFile()));
     }
 }

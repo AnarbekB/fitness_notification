@@ -120,47 +120,11 @@ class GroupLessonType
         return $this;
     }
 
-    //todo move file upload func to upload service
-    /**
-     * @return null|string
-     */
-    public function getAbsolutePath()
-    {
-        return null === $this->image ? null : $this->getUploadRootDir(kernel_path()).'/'.$this->image;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getWebPath()
-    {
-        return null === $this->image ? null : $this->getUploadDir().'/'.$this->image;
-    }
-
-    /**
-     * @param string $basepath
-     * @return string
-     */
-    protected function getUploadRootDir($basepath = '/')
-    {
-        // the absolute directory path where uploaded documents should be saved
-        return $basepath . $this->getUploadDir();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getUploadDir()
-    {
-        //todo this value in config
-        return 'uploads/group_lessons';
-    }
-
     /**
      * @param string $fileName
      * @return $this
      */
-    protected function setImage(string $fileName)
+    public function setImage(string $fileName)
     {
         $this->image = $fileName;
 
@@ -173,28 +137,6 @@ class GroupLessonType
     public function getImage(): ?string
     {
         return $this->image;
-    }
-
-    /**
-     * Upload file
-     *
-     * @param string $basepath
-     */
-    public function upload(string $basepath)
-    {
-        if (null === $this->file) {
-            return;
-        }
-
-        if (null === $basepath) {
-            return;
-        }
-
-        $this->file->move($this->getUploadRootDir($basepath), $this->file->getClientOriginalName());
-
-        $this->setImage($this->file->getClientOriginalName());
-
-        $this->file = null;
     }
 
     /**

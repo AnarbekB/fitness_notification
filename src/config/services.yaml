@@ -32,7 +32,7 @@ services:
 
     admin.user:
         class: App\Admin\UserAdmin
-        arguments: [~, App\Entity\User, ~, "@service_container", '@old_sound_rabbit_mq.notification_producer']
+        arguments: [~, App\Entity\User, ~, "@service_container", '@old_sound_rabbit_mq.notification_producer', '@app.upload_service']
         tags:
             - { name: sonata.admin,
                 manager_type: orm,
@@ -91,7 +91,7 @@ services:
 
     admin.group_lesson_type:
         class: App\Admin\GroupLessonTypeAdmin
-        arguments: [~, App\Entity\GroupLessonType, ~]
+        arguments: [~, App\Entity\GroupLessonType, ~, '@app.upload_service']
         tags:
             - { name: sonata.admin,
                 manager_type: orm,
@@ -125,3 +125,10 @@ services:
     app.consumer.notification:
         class: App\Consumer\NotificationConsumer
         arguments: ['@service_container']
+
+    app.upload_service:
+        class: App\Service\UploadService
+        public: true
+        arguments:
+            $webRoot: '%kernel.project_dir%/public'
+            $targetDir: '%env(UPLOAD_DIRECTORY)%'
