@@ -4,9 +4,12 @@
     {% trans_default_domain 'FOSUserBundle' %}
 
 <div class="uk-container">
-    <img src="{{ user.profilePhoto }}">
-
     <h2>Личные данные</h2>
+    {% if user.profilePhoto %}
+        <img class="uk-border-circle profile-avatar" width="100" height="100" src="/{{ user.profilePhoto }}">
+    {% else %}
+        <img class="uk-border-circle profile-avatar" width="100" height="100" src="img/profile.png">
+    {% endif %}
     <ul class="uk-list uk-list-striped">
         <li>Электронная почта: {{ user.email }}</li>
         <li>Имя: {{ user.firstName }}</li>

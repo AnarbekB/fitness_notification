@@ -56,6 +56,11 @@ class UserAdmin extends AbstractAdmin
         $this->uploadService = $uploadService;
     }
 
+    public function configure()
+    {
+        $this->setTemplate('show', 'fitness/admin/user/show.html.twig');
+    }
+
     protected function configureFormFields(FormMapper $form)
     {
         /** @var User $user */
@@ -101,15 +106,6 @@ class UserAdmin extends AbstractAdmin
 
     protected function configureShowFields(ShowMapper $show)
     {
-        /** @var User $user */
-        $user = $this->getSubject();
-
-        $imagePath = null;
-        $imageEmbed = '';
-        if ($user->getProfilePhoto()) {
-            $imageEmbed = '<img src="/'.$imagePath.'" class="admin-preview" />';
-        }
-
         $show->with('Основное', ['class' => 'col-sm-9']);
             $show->add('username');
             $show->add('firstName');
@@ -124,9 +120,6 @@ class UserAdmin extends AbstractAdmin
             ]);
             $show->add('gender');
             $show->add('dateOfBirth');
-            $show->add('profilePhoto', null, [ //todo view image in detail
-                'html' => $imageEmbed,
-            ]);
         $show->end();
     }
 
