@@ -3,61 +3,70 @@
 {% block fos_user_content %}
     {% trans_default_domain 'FOSUserBundle' %}
 
-<div class="uk-container">
-    <h2>Личные данные</h2>
-    {% if user.profilePhoto %}
-        <img class="uk-border-circle profile-avatar" width="100" height="100" src="/{{ user.profilePhoto }}">
-    {% else %}
-        <img class="uk-border-circle profile-avatar" width="100" height="100" src="img/profile.png">
-    {% endif %}
-    <ul class="uk-list uk-list-striped">
-        <li>Электронная почта: {{ user.email }}</li>
-        <li>Имя: {{ user.firstName }}</li>
-        <li>Фамилия: {{ user.lastName }}</li>
-        <li>Отчество: {{ user.middleName }}</li>
-        <li>Телефон: {{ user.phone }}</li>
-    </ul>
+    <div class="uk-container">
+        <h2>Личные данные</h2>
+        {% if user.profilePhoto %}
+            <img class="uk-border-circle profile-avatar" width="100" height="100" src="/{{ user.profilePhoto }}">
+        {% else %}
+            <img class="uk-border-circle profile-avatar" width="100" height="100" src="img/profile.png">
+        {% endif %}
+        <ul class="uk-list uk-list-striped">
+            <li>Электронная почта: {{ user.email }}</li>
+            <li>Имя: {{ user.firstName }}</li>
+            <li>Фамилия: {{ user.lastName }}</li>
+            <li>Отчество: {{ user.middleName }}</li>
+            <li>Телефон: {{ user.phone }}</li>
+        </ul>
 
-    <h2>Настройки</h2>
-    <div class="uk-margin">
-        <label for="channel-notification">Получать уведомления о занятиях по:</label>
-        <select class="uk-select" id="channel-notification">
-            <option data-channel="phone" {% if user.channelNotification == 'phone' %}selected="selected"{% endif %}>Телефону</option>
-            <option data-channel="email" {% if user.channelNotification == 'email' %}selected="selected"{% endif %}>Email</option>
-            <option data-channel="nothing" {% if user.channelNotification == 'nothing' %}selected="selected"{% endif %}>Не получать уведомления</option>
-        </select>
-    </div>
+        <h2>Настройки</h2>
+        <div class="uk-margin">
+            <label for="channel-notification">Получать уведомления о занятиях по:</label>
+            <select class="uk-select" id="channel-notification">
+                <option data-channel="phone" {% if user.channelNotification == 'phone' %}selected="selected"{% endif %}>
+                    Телефону
+                </option>
+                <option data-channel="email" {% if user.channelNotification == 'email' %}selected="selected"{% endif %}>
+                    Email
+                </option>
+                <option data-channel="nothing"
+                        {% if user.channelNotification == 'nothing' %}selected="selected"{% endif %}>Не получать
+                    уведомления
+                </option>
+            </select>
+        </div>
+        <a class="uk-button uk-button-default" href="{{ path('fos_user_change_password') }}">Сменить пароль</a>
 
 
-    <h2>Список занятий:</h2>
-    <div class="uk-child-width-1-4 uk-grid-small" uk-grid>
-        {% for lesson in user.groupLessonsType %}
-            <div>
-                <div class="uk-card uk-card-default uk-card-hover">
-                    <div class="uk-card-media-top">
-                        {% if lesson.image != '' %}
-                            <img class="image-avatar" src="{{ lesson.image }}">
-                        {% else %}
-                            <img class="image-avatar" src="img/avatar.jpg" alt="">
-                        {% endif %}
-                    </div>
-                    <div class="uk-card-body">
-                        <h3 class="uk-card-title">{{ lesson.name }}</h3>
-                        <p>{{ lesson.comment }}</p>
-                    </div>
-                    <div class="uk-card-footer">
-                        {% for userLesson in user.groupLessonsType %}
-                            {% if userLesson.code == lesson.code %}
-                                <a href="{{ path('un_subscribe_lesson_type',{'code' : lesson.code, 'redirectRoute' : 'fos_user_profile_show'}) }}" class="uk-button uk-button-text">
-                                    Отписаться
-                                </a>
+        <h2>Список занятий:</h2>
+        <div class="uk-child-width-1-4 uk-grid-small" uk-grid>
+            {% for lesson in user.groupLessonsType %}
+                <div>
+                    <div class="uk-card uk-card-default uk-card-hover">
+                        <div class="uk-card-media-top">
+                            {% if lesson.image != '' %}
+                                <img class="image-avatar" src="{{ lesson.image }}">
+                            {% else %}
+                                <img class="image-avatar" src="img/avatar.jpg" alt="">
                             {% endif %}
-                        {% endfor %}
+                        </div>
+                        <div class="uk-card-body">
+                            <h3 class="uk-card-title">{{ lesson.name }}</h3>
+                            <p>{{ lesson.comment }}</p>
+                        </div>
+                        <div class="uk-card-footer">
+                            {% for userLesson in user.groupLessonsType %}
+                                {% if userLesson.code == lesson.code %}
+                                    <a href="{{ path('un_subscribe_lesson_type',{'code' : lesson.code, 'redirectRoute' : 'fos_user_profile_show'}) }}"
+                                       class="uk-button uk-button-text">
+                                        Отписаться
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
 
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
-</div>
 {% endblock fos_user_content %}
