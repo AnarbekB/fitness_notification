@@ -30,6 +30,11 @@ class GroupLessonTypeAdmin extends AbstractAdmin
         $this->uploadService = $uploadService;
     }
 
+    public function configure()
+    {
+        $this->setTemplate('show', 'fitness/admin/group_lesson_type/show.html.twig');
+    }
+
     protected function configureListFields(ListMapper $list)
     {
         $list->add('id', IntegerType::class, [
@@ -68,6 +73,9 @@ class GroupLessonTypeAdmin extends AbstractAdmin
             ]);
         $show->end();
         $show->with('Дополнительно', ['class' => 'col-sm-3']);
+            $show->add('active', 'boolean', [
+                'label' => 'Активность'
+            ]);
         $show->end();
         $show->with('Пользователи', ['class' => 'col-sm-12']);
             $show->add('users', CollectionType::class, [
