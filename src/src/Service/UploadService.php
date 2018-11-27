@@ -26,16 +26,6 @@ class UploadService
 
         $fileName = md5(uniqid()).'.'.$file->getClientOriginalName();
 
-        if (!file_exists($this->getUploadRootDir(
-            $dirUpload,
-            $this->webRoot . '/' . $this->targetDir
-        ))) {
-            mkdir($this->getUploadRootDir(
-                $dirUpload,
-                $this->webRoot . '/' . $this->targetDir
-            ), 0777, true);
-        }
-
         $file->move($this->getUploadRootDir(
             $dirUpload,
             $this->webRoot . '/' . $this->targetDir
