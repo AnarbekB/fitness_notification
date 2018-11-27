@@ -42,7 +42,7 @@ class GroupLessonType
     /**
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", unique=true, nullable=false)
      */
     protected $code;
 
