@@ -55,6 +55,13 @@ ADD php.ini /usr/local/etc/php/php.ini
 #RUN chmod +x /usr/sbin/start-cron
 # Cron
 
+RUN apt-get update -q && \
+    apt-get install --no-install-recommends -qy \
+        supervisor
+
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
+
 # imagick
 RUN apt-get install -y libmagickwand-dev wget traceroute \
     && pecl install imagick \

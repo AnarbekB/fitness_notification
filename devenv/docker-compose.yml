@@ -13,6 +13,7 @@ services:
         - no_proxy
     volumes:
       - "../src:/var/www/html"
+      - "./supervisord/supervisord.conf:/etc/supervisor/conf.d/supervisord.conf"
     restart: always
     environment:
       - TZ=Europe/Moscow
