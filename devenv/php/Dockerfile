@@ -58,9 +58,11 @@ ADD php.ini /usr/local/etc/php/php.ini
 RUN apt-get update -q && \
     apt-get install --no-install-recommends -qy \
         supervisor
-
-CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-
+RUN mkdir -p /var/log/supervisor
+RUN touch /var/log/supervisor.log
+COPY supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+CMD /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+#CMD ["/usr/bin/supervisord"]
 
 # imagick
 RUN apt-get install -y libmagickwand-dev wget traceroute \
@@ -68,3 +70,5 @@ RUN apt-get install -y libmagickwand-dev wget traceroute \
     && docker-php-ext-enable imagick
 
 RUN chown -R www-data:www-data /composer
+
+#RUN supervisord -c /etc/supervisor/conf.d/supervisord.conf &
